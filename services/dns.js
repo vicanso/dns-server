@@ -8,16 +8,18 @@ const Joi = require('joi');
 
 exports.create = create;
 exports.list = list;
+exports.remove = remove;
 
 /**
  * [create description]
  * @param  {[type]} data [description]
  * @return {[type]}      [description]
  */
-function* create(data) {
+function create(data) {
   let schema = {
     domain: Joi.string().required(),
-    ips: Joi.array().required()
+    ips: Joi.array().required(),
+    ttl: Joi.number().integer()
   };
   data = Joi.validateThrow(data, schema, {
     stripUnknown: true
@@ -39,4 +41,14 @@ function list(skip, limit) {
   limit = limit || 10;
   let DNS = mongodb.model('Dns');
   return DNS.find({}).skip(skip).limit(limit).lean().exec();
+}
+
+/**
+ * [remove description]
+ * @param  {[type]} id [description]
+ * @return {[type]}    [description]
+ */
+function remove(id) {
+  let DNS = mongodb.model('Dns');
+  return DNS.findByIdAndRemove(id).lean().exec();
 }

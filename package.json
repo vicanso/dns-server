@@ -45,6 +45,7 @@
     "mongoose": "^4.1.11",
     "node-uuid": "^1.4.3",
     "require-tree": "^1.0.1",
+    "static-parser": "0.0.4",
     "superagent-extend": "0.0.1",
     "toobusy-js": "^0.4.2",
     "url-join": "0.0.1"
@@ -66,5 +67,5 @@
     "through": "^2.3.8"
   },
   "readme": "dns server",
-  "appVersion": "2015-10-12T09:41:45.693Z"
+  "appVersion": "2015-10-16T14:15:27.847Z"
 }

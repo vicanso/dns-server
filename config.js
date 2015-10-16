@@ -39,7 +39,7 @@ exports.appSetting = {
   }
 };
 
-exports.mongodbUri = 'mongodb://macmini:27017/dns-server';
+exports.mongodbUri = 'mongodb://black:27017/dns-server';
 
 exports.udpLog = process.env.UDP_LOG || 'udp://127.0.0.1:2000';
 

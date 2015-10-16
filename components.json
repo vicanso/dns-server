@@ -11,9 +11,11 @@
       "/component/reqwest.js",
       "/component/react.js",
       "/component/react-dom.js",
+      "/component/classnames.js",
+      "/js/service.js",
       "/js/home-react.js"
     ],
-    "modifiedAt": "2015-10-15T17:51:55.232"
+    "modifiedAt": "2015-10-16T21:00:29.405"
   },
   "angular/home": {
     "css": [
