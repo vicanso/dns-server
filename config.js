@@ -12,6 +12,8 @@ exports.app = pkg.name;
 
 exports.port = env === 'development' ? 5000 : 80;
 
+exports.dnsPort = 53;
+
 exports.trackKey = '_track';
 
 exports.appUrlPrefix = env === 'development' ? '' : '/dns-server';
@@ -39,7 +41,7 @@ exports.appSetting = {
   }
 };
 
-exports.mongodbUri = 'mongodb://black:27017/dns-server';
+exports.mongodbUri = 'mongodb://macmini:27017/dns-server';
 
 exports.udpLog = process.env.UDP_LOG || 'udp://127.0.0.1:2000';
 

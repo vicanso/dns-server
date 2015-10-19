@@ -9,6 +9,7 @@ const Joi = require('joi');
 exports.create = create;
 exports.list = list;
 exports.remove = remove;
+exports.get = get;
 
 /**
  * [create description]
@@ -51,4 +52,12 @@ function list(skip, limit) {
 function remove(id) {
   let DNS = mongodb.model('Dns');
   return DNS.findByIdAndRemove(id).lean().exec();
+}
+
+
+function get(domain) {
+  let DNS = mongodb.model('Dns');
+  return DNS.findOne({
+    domain: domain
+  }).lean().exec();
 }

@@ -9,7 +9,7 @@ const globals = localRequire('globals');
 const debug = localRequire('helpers/debug');
 const urlJoin = require('url-join');
 const errors = localRequire('errors');
-co(function*() {
+co(function* () {
   localRequire('helpers/monitor').run(60 * 1000);
   const server = localRequire('helpers/server');
   initServer();
@@ -19,7 +19,7 @@ co(function*() {
   yield server.initMongodb();
   // yield server.initStatsd();
   // yield server.initRedisSession();
-}).catch(function(err) {
+}).catch(function (err) {
   console.error(err);
 });
 
@@ -43,7 +43,7 @@ function initServer() {
   app.use(localRequire('middlewares/error'));
 
   // http response默认为不缓存，并添加X-
-  app.use(function*(next) {
+  app.use(function* (next) {
     /*jshint validthis:true */
     let ctx = this;
 
@@ -61,7 +61,7 @@ function initServer() {
   });
 
   // healthy check
-  app.use(mount('/ping', function*() {
+  app.use(mount('/ping', function* () {
     yield Promise.resolve();
     if (globals.get('status') !== 'running') {
       throw errors.get('the server is not running now!');
@@ -107,7 +107,7 @@ function initServer() {
   app.use(require('koa-connection-limit')({
     mid: 100,
     high: 500,
-    event: function(status) {
+    event: function (status) {
       if (status === 'high') {
         globals.set('status', 'pause');
         if (connectionLimitTimer) {
@@ -116,7 +116,7 @@ function initServer() {
         }
       } else {
         // 状态为low或者mid时，延时5秒将服务设置回running
-        connectionLimitTimer = setTimeout(function() {
+        connectionLimitTimer = setTimeout(function () {
           globals.set('status', 'running');
           connectionLimitTimer = null;
         }, 5000);
@@ -166,4 +166,31 @@ function initServer() {
 
   app.listen(port);
   console.info('server listen on:%s', port);
+
+  initDnsServer();
+}
+
+
+function initDnsServer(port) {
+  const dns = require('native-dns');
+  const dnsService = localRequire('services/dns');
+  let server = dns.createServer();
+  server.on('request', function (req, res) {
+    co(function* () {
+      let domain = request.question[0].name;
+      let data = yield dnsService.get(domain);
+      debug('domain:%s, result:%j', domain, data);
+      _.forEach(data.ips, function (ip) {
+        res.answer.push(dns.A({
+          name: domain,
+          address: ip,
+          ttl: data.ttl
+        }));
+      });
+      res.send();
+    }).catch(function (err) {
+      res.send();
+    });
+  });
+  server.serve(config.dnsPort);
 }
